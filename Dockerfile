@@ -1,13 +1,14 @@
 FROM node:lts-alpine3.12 AS build
 LABEL frontend_app="0.0.1"
 
+ARG BACKEND_URL=backend.okurnitsov.test.coherentprojects.net
 WORKDIR /opt/frontend
 
 RUN apk --verbose --update-cache --upgrade add \
     git \
     && rm -rf /var/cache/apk/* \
     && rm -rf /tmp/* \
-    && sed -i "s/conduit.productionready.io\\/api/backend.okurnitsov.test.coherentprojects.net/g" src/agent.js \
+    && sed -i "s/conduit.productionready.io\\/api/${BACKEND_URL}/g" src/agent.js \
     && npm install \
     && npm run build 
 
