@@ -2,12 +2,15 @@ FROM node:lts-alpine3.12 AS build
 LABEL frontend_app="0.0.1"
 
 ARG BACKEND_URL=backend.okurnitsov.test.coherentprojects.net
+ENV FRONTEND_URL=https://github.com/vitamin-b12/devops-training-project-frontend.git
 WORKDIR /opt/frontend
 
 RUN apk --verbose --update-cache --upgrade add \
     git \
     && rm -rf /var/cache/apk/* \
     && rm -rf /tmp/* \
+    && git clone ${FRONTEND_URL} \
+    && cd devops-training-project-frontend \
     && sed -i "s/conduit.productionready.io\\/api/${BACKEND_URL}/g" src/agent.js \
     && npm install \
     && npm run build 
