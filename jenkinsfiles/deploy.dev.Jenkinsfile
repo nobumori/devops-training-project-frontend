@@ -2,13 +2,6 @@
 
 pipeline {
     agent any
-    parameters {
-        def gettags = ("git ls-remote -t -h https://github.com/nobumori/devops-training-project-frontend.git").execute()
-        return gettags.text.readLines().collect { 
-        it.split()[1].replaceAll('refs/heads/', '').replaceAll('refs/tags/', '').replaceAll("\\^\\{\\}", '')
-        }
-    }
-
     options {
         skipDefaultCheckout()
         disableConcurrentBuilds()
