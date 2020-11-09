@@ -3,7 +3,10 @@
 pipeline {
     agent any
     parameters {
-        string(name: 'commit_id', defaultValue: 'develop', description: 'branch/tag/commit value to deploy')
+        def gettags = ("git ls-remote -t -h https://github.com/nobumori/devops-training-project-frontend.git").execute()
+        return gettags.text.readLines().collect { 
+        it.split()[1].replaceAll('refs/heads/', '').replaceAll('refs/tags/', '').replaceAll("\\^\\{\\}", '')
+        }
     }
 
     options {
@@ -23,6 +26,9 @@ pipeline {
             }
         }
         stage('Sonarqube'){
+            when {
+                branch 'develop'
+            }
             environment {
                 scannerHome = tool 'sonarqube_scaner'
             }
@@ -33,6 +39,9 @@ pipeline {
             }
         }
         stage("Quality Gate") {
+            when {
+                branch 'develop'
+            }
             steps {
                 sleep(5)
                 timeout(time: 3, unit: 'MINUTES') {
