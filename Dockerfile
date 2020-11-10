@@ -2,7 +2,7 @@ FROM node:lts-alpine3.12 AS build
 LABEL frontend_app="0.0.1"
 
 ARG BACKEND_URL=dummy.url
-ENV FRONTEND_REPO=https://github.com/vitamin-b12/devops-training-project-frontend.git
+ENV FRONTEND_REPO=https://github.com/nobumori/devops-training-project-frontend.git
 WORKDIR /opt/frontend
 
 RUN apk --verbose --update-cache --upgrade add \
