@@ -1,0 +1,37 @@
+version: 0.2
+
+env:
+  variables:
+      PROJECT_REPO: "242906888793.dkr.ecr.us-east-1.amazonaws.com/okurnitsov-environment-ecs-frontend"
+      BUILD_VERSION: "latest"
+      REPO_BRANCH: "-develop" 
+  parameter-store:
+      BACKEND_URL: "/okurnitsov-frontend/BACKEND_URL"
+  exported-variables:
+      - PROJECT_REPO
+      - BUILD_VERSION
+      - BACKEND_URL
+      - REPO_BRANCH
+phases:
+  install:
+    runtime-versions:
+       docker: 19
+  pre_build:
+    commands:
+       - $(aws ecr get-login --region $AWS_DEFAULT_REGION --no-include-email)
+       - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+       - IMAGE_TAG=$COMMIT_HASH$REPO_BRANCH
+  build:
+    commands:
+       - echo Build started on `date`
+       - git checkout develop
+       - docker build -t  $PROJECT_REPO:$BUILD_VERSION .
+       - docker tag $PROJECT_REPO:$BUILD_VERSION $PROJECT_REPO:$IMAGE_TAG
+  post_build:
+    commands:
+       - echo Build completed on `date`
+       - docker push $PROJECT_REPO:$BUILD_VERSION
+       - docker push $PROJECT_REPO:$IMAGE_TAG
+       - printf '[{"name":"okurnitsov-frontend","image_url":"%s"}]' $PROJECT_REPO:$BUILD_VERSION > imagedefinitions.json
+artifacts:
+  files: imagedefinitions.json
