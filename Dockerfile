@@ -1,7 +1,7 @@
 FROM node:lts-alpine3.12 AS build
 LABEL frontend_app="0.0.1"
 
-ARG BACKEND_URL=dummy.url
+ARG BACKEND_URL
 WORKDIR /opt/frontend
 
 RUN apk --verbose --update-cache --upgrade add \
