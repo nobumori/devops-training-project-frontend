@@ -55,7 +55,7 @@ pipeline {
         }
         stage('Push to Nexus') {
             environment {
-                BUILD_DATE = sh(returnStdout: true, script: "date -u +'%d_%m_%Y_%H_%M_%S'").trim()
+                BUILD_DATE = sh(returnStdout: true, script: "date -u +'%d-%m-%Y-%H-%M-%S'").trim()
             }
             steps {
                 sh "zip -r build-${BUILD_ID}.zip build/*"
