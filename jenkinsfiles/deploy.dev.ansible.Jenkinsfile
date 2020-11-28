@@ -15,7 +15,7 @@ pipeline {
         }
         stage('Replace backend URL') {
             steps {
-                sh "sed -i 's/conduit.productionready.io\\/api/localhost:8080/g' src/agent.js"
+                sh "sed -i 's/conduit.productionready.io\\/api/localhost\\:8080/g' src/agent.js"
             }
         }
         stage('Sonarqube'){
