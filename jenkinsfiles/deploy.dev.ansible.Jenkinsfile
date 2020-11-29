@@ -84,9 +84,9 @@ pipeline {
         }
     }
     post {
-        always {
-            cleanWs()
-        }
+ //       always {
+ //           cleanWs()
+ //       }
         success{
             echo " ---=== SUCCESS ===---"
         }
