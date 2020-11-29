@@ -2,6 +2,9 @@
 
 pipeline {
     agent any
+    environment {
+        BUILD_DATE = sh(returnStdout: true, script: "date -u +'%d-%m-%Y-%H-%M-%S'").trim()
+    }
     options {
         skipDefaultCheckout()
         disableConcurrentBuilds()
@@ -54,9 +57,6 @@ pipeline {
             }
         }
         stage('Push to Nexus') {
-            environment {
-                BUILD_DATE = sh(returnStdout: true, script: "date -u +'%d-%m-%Y-%H-%M-%S'").trim()
-            }
             steps {
                 sh "zip -r build-${BUILD_ID}.zip build/*"
                 script {
@@ -69,9 +69,17 @@ pipeline {
                         nexusVersion: 'nexus3',
                         protocol: 'https',
                         repository: '${NEXUS_FRONT}',
-                        version: "${BUILD_DATE}"
+                        version: "$BUILD_DATE"
                     }
                 }    
+            }
+        }
+        stage ('Delpoy Ansible') {
+            environment {
+                ARTIFACT_URL = 'https://${NEXUS_URL}/repository/frontend/devops-training/build/$BUILD_DATE/build-$BUILD_DATE.zip'
+            }
+            steps{
+                sh "ansible-playbook /home/ec2-user/app_front.yml --extra-vars "nexus_front_url=$ARTIFACT_URL"
             }
         }
     }
