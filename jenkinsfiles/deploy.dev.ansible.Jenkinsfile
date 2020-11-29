@@ -11,11 +11,11 @@ pipeline {
     }
     
     stages {
-        stage('Clone repository') {
-            steps {
-                git 'https://github.com/nobumori/devops-training-project-frontend.git'
-            }
-        }
+//        stage('Clone repository') {
+//            steps {
+//                git 'https://github.com/nobumori/devops-training-project-frontend.git'
+//            }
+//        }
         stage('Replace backend URL') {
             steps {
                 sh "sed -i 's/conduit.productionready.io\\/api/localhost\\:8080/g' src/agent.js"
