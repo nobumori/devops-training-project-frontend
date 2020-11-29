@@ -1,0 +1,7 @@
+---
+
+- name: "Frontend installation"
+  hosts: app
+
+  roles:
+   - app_front 
