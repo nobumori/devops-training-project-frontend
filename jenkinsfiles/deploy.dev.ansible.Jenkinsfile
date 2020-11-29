@@ -78,8 +78,8 @@ pipeline {
             environment {
                 ARTIFACT_URL = 'https://${NEXUS_URL}/repository/frontend/devops-training/build/$BUILD_DATE/build-$BUILD_DATE.zip'
             }
-            steps{
-                sh "ansible-playbook app_front.yml --extra-vars nexus_front_url=$ARTIFACT_URL"
+            steps{ 
+                sh "ansible-playbook app_front.yml -u ec2-user --private-key /etc/ansible/keys/issoft_ssh_key --extra-vars nexus_front_url=$ARTIFACT_URL"
             }
         }
     }
